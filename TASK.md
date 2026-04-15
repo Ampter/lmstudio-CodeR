@@ -356,15 +356,15 @@ Use authoritative documentation first:
 
 ## 15) Deliverables Checklist
 
-- [ ] Plugin scaffold with build/dev scripts
-- [ ] Core tools implemented and registered
-- [ ] Safety boundaries enforced (paths, commands, limits)
-- [ ] Prompt rules enforce plan → edit → test → fix loop
-- [ ] `apply_patch` available and validated
-- [ ] `git_status` + `git_diff` tools
-- [ ] Real `web_search` provider integration
-- [ ] Unit + integration + adversarial test coverage
-- [ ] Documentation (`security.md`, `tool-contracts.md`, `release-checklist.md`)
+- [x] Plugin scaffold with build/dev scripts
+- [x] Core tools implemented and registered
+- [x] Safety boundaries enforced (paths, commands, limits)
+- [x] Prompt rules enforce plan → edit → test → fix loop
+- [x] `apply_patch` available and validated
+- [x] `git_status` + `git_diff` tools
+- [x] Real `web_search` provider integration
+- [x] Unit + integration + adversarial test coverage (core guardrail-focused suite)
+- [x] Documentation (`security.md`, `tool-contracts.md`, `release-checklist.md`)
 
 ---
 
@@ -403,3 +403,18 @@ If starting immediately, do this first:
 7. Validate with one end-to-end bug-fix scenario.
 
 This sequence delivers a practical coding agent quickly while maintaining safety and transparency.
+
+
+---
+
+## 19) Implementation Status
+
+Implemented a TypeScript plugin scaffold in this repository with:
+
+- Registered tool entry points in `src/index.ts`
+- Runtime safety guards for path resolution, command allowlist, and loop limits
+- Structured `apply_patch` operation with context validation
+- Git transparency tools and default test execution wrapper
+- Web search adapter (DuckDuckGo HTML fallback parser)
+- Baseline tests for guards, patching, and command allowlisting
+- Security and contract documentation in `docs/`
