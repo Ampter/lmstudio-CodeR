@@ -1,0 +1,11 @@
+{
+  "name": "coding-agent-plugin",
+  "version": "0.1.0",
+  "entry": "dist/index.js",
+  "description": "Safe coding-agent workflow plugin for LM Studio",
+  "permissions": {
+    "filesystem": "workspace",
+    "network": true,
+    "shell": "restricted"
+  }
+}
