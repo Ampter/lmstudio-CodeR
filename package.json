@@ -2,7 +2,7 @@
   "name": "coding-agent-plugin",
   "version": "0.1.0",
   "description": "LM Studio coding agent plugin scaffold with safe toolchain",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
