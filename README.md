@@ -21,6 +21,8 @@ npm run build
 
 This compiles TypeScript into `dist/`. The LM Studio manifest now uses plugin metadata fields (`type`, `runner`, `owner`, `revision`) that `lms dev` expects.
 
+> Runtime note: the plugin package is intentionally built as **CommonJS** so LM Studio can load generated `production.js` bundles that use `require(...)` without triggering Node's ES module scope errors.
+
 ## Install in LM Studio
 
 From the project root, install this local plugin into LM Studio:
