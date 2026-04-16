@@ -48,11 +48,7 @@ lms dev
 This starts a local plugin dev server with rebuild/reload on file changes.
 
 ### Install from LM Studio Hub (published plugins)
-If/when this plugin is published, you can install by artifact name:
-
-```bash
-lms get <owner>/<plugin-name>
-```
+Working on it
 
 ## How it works
 
