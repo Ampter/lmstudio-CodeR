@@ -57,12 +57,15 @@ CodeR exposes a set of tools that guide a model through a practical coding loop:
 1. Inspect the repository (`get_repo_tree`)
 2. Detect the project stack (`detect_project`)
 3. Read/search relevant files (`read_file`, `search_code`, `list_files`, `find_files`)
-4. Edit code safely (`apply_patch`, `replace_text_in_file`)
-5. File management (`save_file`, `make_directory`, `move_file`, `copy_file`, `delete_path`, `delete_files_by_pattern`)
-6. Run checks (`run_tests`, `run_command`)
-7. Inspect changes (`git_status`, `git_diff`, `git_commit`, `git_log`)
-8. Web research (`web_search`, `get_site_contents`, `fetch_web_content`, `wikipedia_search`)
-9. System utilities (`get_system_info`, `save_memory`)
+4. Read documents (`read_document`)
+5. Edit code safely (`apply_patch`, `replace_text_in_file`)
+6. File management (`save_file`, `make_directory`, `move_file`, `copy_file`, `delete_path`, `delete_files_by_pattern`)
+7. Run checks (`run_tests`, `run_command`)
+8. Execute code (`run_javascript`, `run_python`)
+9. Inspect changes (`git_status`, `git_diff`, `git_commit`, `git_log`)
+10. Web research (`web_search`, `get_site_contents`, `fetch_web_content`, `wikipedia_search`)
+11. Delegate to agents (`consult_secondary_agent`, `save_project_context`)
+12. System utilities (`get_system_info`, `save_memory`)
 
 All tool calls are tracked per session with runtime limits to prevent uncontrolled loops.
 
@@ -106,6 +109,14 @@ All tool calls are tracked per session with runtime limits to prevent uncontroll
 ### Utilities
 - `get_system_info`: Get system information (OS, CPU, Memory).
 - `save_memory`: Save information to long-term memory.
+
+### Agents
+- `consult_secondary_agent`: Consult a secondary agent to handle complex tasks.
+- `save_project_context`: Save project context for sub-agents.
+- `read_project_context`: Read saved project context.
+
+### Documents
+- `read_document`: Read content from PDF or DOCX files.
 
 ## Security model
 
