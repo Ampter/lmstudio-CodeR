@@ -12,6 +12,28 @@ function classifySource(url: string): WebSearchResult["sourceType"] {
   return "unknown";
 }
 
+export async function getSiteContents(url: string): Promise<string> {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent": "coding-agent-plugin/0.1.0",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`get_site_contents failed: ${response.status}`);
+  }
+
+  const html = await response.text();
+  const text = html
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return text.slice(0, 50000);
+}
+
 export async function webSearch(query: string): Promise<WebSearchResult[]> {
   const endpoint = `https://duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
   const response = await fetch(endpoint, {

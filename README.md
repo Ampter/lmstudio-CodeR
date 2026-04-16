@@ -64,7 +64,8 @@ CodeR exposes a set of tools that guide a model through a practical coding loop:
 4. Edit code safely (`apply_patch`)
 5. Run checks (`run_tests`, `run_command`)
 6. Inspect changes (`git_status`, `git_diff`)
-7. Use web lookup for unknown issues (`web_search`)
+7. Fetch web page contents (`get_site_contents`)
+8. Use web lookup for unknown issues (`web_search`)
 
 All tool calls are tracked per session with runtime limits to prevent uncontrolled loops.
 
@@ -80,6 +81,7 @@ All tool calls are tracked per session with runtime limits to prevent uncontroll
 - `run_tests`: Project test runner wrapper.
 - `git_status`: Concise repository status.
 - `git_diff`: Staged/unstaged diff output.
+- `get_site_contents`: Fetch and extract text content from a URL.
 - `web_search`: Structured web results for documentation/error research.
 
 ## Security model
