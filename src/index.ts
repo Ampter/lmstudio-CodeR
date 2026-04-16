@@ -2,12 +2,25 @@ import { type PluginContext, type ToolsProviderController, tool, text } from "@l
 import { z } from "zod";
 import { detectProject } from "./tools/project.js";
 import { getRepoTree } from "./tools/repo.js";
-import { listFiles, readFile, searchCode } from "./tools/files.js";
+import {
+  listFiles,
+  readFile,
+  searchCode,
+  makeDirectory,
+  deletePath,
+  moveFile,
+  copyFile,
+  replaceTextInFile,
+  deleteFilesByPattern,
+  findFiles,
+} from "./tools/files.js";
 import { applyPatch, type ReplacePatchOp } from "./tools/patch.js";
 import { runCommand } from "./tools/terminal.js";
 import { runTests } from "./tools/tests.js";
-import { gitDiff, gitStatus } from "./tools/git.js";
-import { webSearch, getSiteContents } from "./tools/web.js";
+import { gitDiff, gitStatus, gitCommit, gitLog } from "./tools/git.js";
+import { webSearch, getSiteContents, wikipediaSearch, fetchWebContent } from "./tools/web.js";
+import { getSystemInfo, readClipboard, writeClipboard, saveMemory } from "./tools/utils.js";
+import { runJavascript, runPython } from "./tools/execution.js";
 
 let toolCallCount = 0;
 let webSearchCount = 0;
@@ -134,6 +147,156 @@ export async function toolsProvider(ctl: ToolsProviderController) {
         if (toolCallCount > 100) return "Error: Tool call limit exceeded";
         if (webSearchCount > 10) return "Error: Web search limit exceeded";
         return webSearch(query);
+      },
+    }),
+    tool({
+      name: "make_directory",
+      description: text`Create a new directory`,
+      parameters: { workspaceRoot: z.string(), directoryName: z.string() },
+      implementation: async ({ workspaceRoot, directoryName }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return makeDirectory(workspaceRoot, directoryName);
+      },
+    }),
+    tool({
+      name: "delete_path",
+      description: text`Delete a file or directory`,
+      parameters: { workspaceRoot: z.string(), path: z.string() },
+      implementation: async ({ workspaceRoot, path }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return deletePath(workspaceRoot, path);
+      },
+    }),
+    tool({
+      name: "move_file",
+      description: text`Move or rename a file`,
+      parameters: { workspaceRoot: z.string(), source: z.string(), destination: z.string() },
+      implementation: async ({ workspaceRoot, source, destination }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return moveFile(workspaceRoot, source, destination);
+      },
+    }),
+    tool({
+      name: "copy_file",
+      description: text`Copy a file to a new location`,
+      parameters: { workspaceRoot: z.string(), source: z.string(), destination: z.string() },
+      implementation: async ({ workspaceRoot, source, destination }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return copyFile(workspaceRoot, source, destination);
+      },
+    }),
+    tool({
+      name: "replace_text_in_file",
+      description: text`Replace a specific string in a file`,
+      parameters: { workspaceRoot: z.string(), fileName: z.string(), oldString: z.string(), newString: z.string() },
+      implementation: async ({ workspaceRoot, fileName, oldString, newString }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return replaceTextInFile(workspaceRoot, fileName, oldString, newString);
+      },
+    }),
+    tool({
+      name: "delete_files_by_pattern",
+      description: text`Delete multiple files matching a regex pattern`,
+      parameters: { workspaceRoot: z.string(), pattern: z.string() },
+      implementation: async ({ workspaceRoot, pattern }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return deleteFilesByPattern(workspaceRoot, pattern);
+      },
+    }),
+    tool({
+      name: "find_files",
+      description: text`Find files using glob pattern`,
+      parameters: { workspaceRoot: z.string(), pattern: z.string(), limit: z.number().optional() },
+      implementation: async ({ workspaceRoot, pattern, limit }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return findFiles(workspaceRoot, pattern, limit);
+      },
+    }),
+    tool({
+      name: "wikipedia_search",
+      description: text`Search Wikipedia for information`,
+      parameters: { query: z.string() },
+      implementation: async ({ query }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return wikipediaSearch(query);
+      },
+    }),
+    tool({
+      name: "fetch_web_content",
+      description: text`Fetch clean text content from a URL`,
+      parameters: { url: z.string() },
+      implementation: async ({ url }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return fetchWebContent(url);
+      },
+    }),
+    tool({
+      name: "git_commit",
+      description: text`Commit staged changes`,
+      parameters: { workspaceRoot: z.string(), message: z.string() },
+      implementation: async ({ workspaceRoot, message }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return gitCommit(workspaceRoot, message);
+      },
+    }),
+    tool({
+      name: "git_log",
+      description: text`Get recent git commit history`,
+      parameters: { workspaceRoot: z.string(), maxCount: z.number().optional() },
+      implementation: async ({ workspaceRoot, maxCount }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return gitLog(workspaceRoot, maxCount);
+      },
+    }),
+    tool({
+      name: "get_system_info",
+      description: text`Get system information`,
+      parameters: {},
+      implementation: async () => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return getSystemInfo();
+      },
+    }),
+    tool({
+      name: "save_memory",
+      description: text`Save information to long-term memory`,
+      parameters: { workspaceRoot: z.string(), fact: z.string() },
+      implementation: async ({ workspaceRoot, fact }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return saveMemory(workspaceRoot, fact);
+      },
+    }),
+    tool({
+      name: "run_javascript",
+      description: text`Run JavaScript code using Deno`,
+      parameters: { workspaceRoot: z.string(), javascript: z.string(), timeoutSeconds: z.number().optional() },
+      implementation: async ({ workspaceRoot, javascript, timeoutSeconds }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return runJavascript(workspaceRoot, javascript, timeoutSeconds);
+      },
+    }),
+    tool({
+      name: "run_python",
+      description: text`Run Python code`,
+      parameters: { workspaceRoot: z.string(), python: z.string(), timeoutSeconds: z.number().optional() },
+      implementation: async ({ workspaceRoot, python, timeoutSeconds }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return runPython(workspaceRoot, python, timeoutSeconds);
       },
     }),
   ];

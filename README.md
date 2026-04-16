@@ -60,29 +60,56 @@ CodeR exposes a set of tools that guide a model through a practical coding loop:
 
 1. Inspect the repository (`get_repo_tree`)
 2. Detect the project stack (`detect_project`)
-3. Read/search relevant files (`read_file`, `search_code`, `list_files`)
-4. Edit code safely (`apply_patch`)
-5. Run checks (`run_tests`, `run_command`)
-6. Inspect changes (`git_status`, `git_diff`)
-7. Fetch web page contents (`get_site_contents`)
-8. Use web lookup for unknown issues (`web_search`)
+3. Read/search relevant files (`read_file`, `search_code`, `list_files`, `find_files`)
+4. Edit code safely (`apply_patch`, `replace_text_in_file`)
+5. File management (`save_file`, `make_directory`, `move_file`, `copy_file`, `delete_path`, `delete_files_by_pattern`)
+6. Run checks (`run_tests`, `run_command`)
+7. Inspect changes (`git_status`, `git_diff`, `git_commit`, `git_log`)
+8. Web research (`web_search`, `get_site_contents`, `fetch_web_content`, `wikipedia_search`)
+9. System utilities (`get_system_info`, `save_memory`)
 
 All tool calls are tracked per session with runtime limits to prevent uncontrolled loops.
 
 ## Available tools
 
+### File System
 - `get_repo_tree`: Depth-limited repository tree view.
-- `detect_project`: Detects ecosystem and suggests likely commands.
 - `list_files`: Glob-based file listing with limits.
+- `find_files`: Find files using glob pattern.
 - `read_file`: Guarded UTF-8 file read.
 - `search_code`: Pattern search with snippets and file/line references.
+- `make_directory`: Create a new directory.
+- `delete_path`: Delete a file or directory.
+- `move_file`: Move or rename a file.
+- `copy_file`: Copy a file to a new location.
+- `replace_text_in_file`: Replace a specific string in a file.
+- `delete_files_by_pattern`: Delete multiple files matching a regex pattern.
+
+### Code Editing
 - `apply_patch`: Structured, context-validated edits.
+
+### Execution
 - `run_command`: Allowlisted shell command execution.
 - `run_tests`: Project test runner wrapper.
+
+### Git
 - `git_status`: Concise repository status.
 - `git_diff`: Staged/unstaged diff output.
-- `get_site_contents`: Fetch and extract text content from a URL.
+- `git_commit`: Commit staged changes.
+- `git_log`: Get recent git commit history.
+
+### Project
+- `detect_project`: Detects ecosystem and suggests likely commands.
+
+### Web
 - `web_search`: Structured web results for documentation/error research.
+- `get_site_contents`: Fetch and extract text content from a URL.
+- `fetch_web_content`: Fetch clean text content from a URL with title.
+- `wikipedia_search`: Search Wikipedia for information.
+
+### Utilities
+- `get_system_info`: Get system information (OS, CPU, Memory).
+- `save_memory`: Save information to long-term memory.
 
 ## Security model
 

@@ -1,7 +1,7 @@
 {
   "name": "coding-agent-plugin",
-  "version": "0.1.0",
-  "description": "LM Studio coding agent plugin scaffold with safe toolchain",
+  "version": "0.2.0",
+  "description": "LM Studio coding agent plugin with safe toolchain",
   "type": "commonjs",
   "main": "dist/index.js",
   "scripts": {
@@ -18,7 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "@lmstudio/sdk": "^1.5.0",
-    "fast-glob": "^3.3.3"
+    "fast-glob": "^3.3.3",
+    "html-to-text": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.15.2",

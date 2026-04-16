@@ -4,6 +4,79 @@ import fg from "fast-glob";
 import { DEFAULT_IGNORES, LIMITS } from "../config.js";
 import { resolveWorkspacePath } from "../runtime/guards.js";
 
+export async function makeDirectory(workspaceRoot: string, dirName: string): Promise<string> {
+  const absolutePath = resolveWorkspacePath(workspaceRoot, dirName);
+  await fs.mkdir(absolutePath, { recursive: true });
+  return absolutePath;
+}
+
+export async function deletePath(workspaceRoot: string, targetPath: string): Promise<string> {
+  const absolutePath = resolveWorkspacePath(workspaceRoot, targetPath);
+  await fs.rm(absolutePath, { recursive: true, force: true });
+  return absolutePath;
+}
+
+export async function moveFile(workspaceRoot: string, source: string, destination: string): Promise<{ from: string; to: string }> {
+  const sourcePath = resolveWorkspacePath(workspaceRoot, source);
+  const destPath = resolveWorkspacePath(workspaceRoot, destination);
+  await fs.rename(sourcePath, destPath);
+  return { from: sourcePath, to: destPath };
+}
+
+export async function copyFile(workspaceRoot: string, source: string, destination: string): Promise<{ from: string; to: string }> {
+  const sourcePath = resolveWorkspacePath(workspaceRoot, source);
+  const destPath = resolveWorkspacePath(workspaceRoot, destination);
+  await fs.copyFile(sourcePath, destPath);
+  return { from: sourcePath, to: destPath };
+}
+
+export async function replaceTextInFile(
+  workspaceRoot: string,
+  fileName: string,
+  oldString: string,
+  newString: string,
+): Promise<{ success: boolean; message: string }> {
+  const filePath = resolveWorkspacePath(workspaceRoot, fileName);
+  const content = await fs.readFile(filePath, "utf8");
+
+  if (!content.includes(oldString)) {
+    return { success: false, message: "Could not find the exact 'old_string' in the file." };
+  }
+
+  const occurrenceCount = content.split(oldString).length - 1;
+  if (occurrenceCount > 1) {
+    return { success: false, message: `Found ${occurrenceCount} occurrences of 'old_string'. Please provide more context to make it unique.` };
+  }
+
+  const newContent = content.replace(oldString, newString);
+  await fs.writeFile(filePath, newContent, "utf8");
+  return { success: true, message: `Successfully replaced text in ${fileName}` };
+}
+
+export async function deleteFilesByPattern(workspaceRoot: string, pattern: string): Promise<{ deletedCount: number; deletedFiles: string[] }> {
+  if (pattern.length > 100) {
+    throw new Error("Pattern too complex (max 100 characters)");
+  }
+
+  const regex = new RegExp(pattern);
+  const root = resolveWorkspacePath(workspaceRoot, ".");
+  const files = await fg("*", { cwd: root, onlyFiles: true });
+  const deleted: string[] = [];
+
+  for (const file of files) {
+    if (regex.test(file)) {
+      await fs.rm(path.join(root, file), { force: true });
+      deleted.push(file);
+    }
+  }
+
+  return { deletedCount: deleted.length, deletedFiles: deleted };
+}
+
+export async function findFiles(workspaceRoot: string, pattern: string, limit = 200): Promise<string[]> {
+  return listFiles(workspaceRoot, pattern, limit);
+}
+
 export async function listFiles(workspaceRoot: string, pattern = "**/*", limit = 200): Promise<string[]> {
   const root = resolveWorkspacePath(workspaceRoot, ".");
   const entries = await fg(pattern, {
