@@ -21,6 +21,7 @@ import { gitDiff, gitStatus, gitCommit, gitLog } from "./tools/git.js";
 import { webSearch, getSiteContents, wikipediaSearch, fetchWebContent } from "./tools/web.js";
 import { getSystemInfo, readClipboard, writeClipboard, saveMemory } from "./tools/utils.js";
 import { runJavascript, runPython } from "./tools/execution.js";
+import { consultSecondaryAgent, saveProjectContext, readProjectContext } from "./tools/agent.js";
 
 let toolCallCount = 0;
 let webSearchCount = 0;
@@ -297,6 +298,41 @@ export async function toolsProvider(ctl: ToolsProviderController) {
         toolCallCount++;
         if (toolCallCount > 100) return "Error: Tool call limit exceeded";
         return runPython(workspaceRoot, python, timeoutSeconds);
+      },
+    }),
+    tool({
+      name: "consult_secondary_agent",
+      description: text`Consult a secondary agent to handle complex tasks`,
+      parameters: {
+        workspaceRoot: z.string(),
+        task: z.string(),
+        model: z.string().optional(),
+        systemPrompt: z.string().optional(),
+      },
+      implementation: async ({ workspaceRoot, task, model, systemPrompt }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return consultSecondaryAgent(workspaceRoot, task, { model, systemPrompt });
+      },
+    }),
+    tool({
+      name: "save_project_context",
+      description: text`Save project context for sub-agents`,
+      parameters: { workspaceRoot: z.string(), projectName: z.string(), context: z.string() },
+      implementation: async ({ workspaceRoot, projectName, context }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return saveProjectContext(workspaceRoot, projectName, context);
+      },
+    }),
+    tool({
+      name: "read_project_context",
+      description: text`Read saved project context`,
+      parameters: { workspaceRoot: z.string() },
+      implementation: async ({ workspaceRoot }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return readProjectContext(workspaceRoot);
       },
     }),
   ];
