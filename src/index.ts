@@ -22,6 +22,7 @@ import { webSearch, getSiteContents, wikipediaSearch, fetchWebContent } from "./
 import { getSystemInfo, readClipboard, writeClipboard, saveMemory } from "./tools/utils.js";
 import { runJavascript, runPython } from "./tools/execution.js";
 import { consultSecondaryAgent, saveProjectContext, readProjectContext } from "./tools/agent.js";
+import { readDocument } from "./tools/documents.js";
 
 let toolCallCount = 0;
 let webSearchCount = 0;
@@ -333,6 +334,16 @@ export async function toolsProvider(ctl: ToolsProviderController) {
         toolCallCount++;
         if (toolCallCount > 100) return "Error: Tool call limit exceeded";
         return readProjectContext(workspaceRoot);
+      },
+    }),
+    tool({
+      name: "read_document",
+      description: text`Read content from PDF or DOCX files`,
+      parameters: { workspaceRoot: z.string(), filePath: z.string() },
+      implementation: async ({ workspaceRoot, filePath }) => {
+        toolCallCount++;
+        if (toolCallCount > 100) return "Error: Tool call limit exceeded";
+        return readDocument(workspaceRoot, filePath);
       },
     }),
   ];
